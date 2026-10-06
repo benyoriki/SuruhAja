@@ -1,7 +1,8 @@
 /* SuruhAja — data lokal (localStorage). Ubah DEFAULT untuk data awal. Kompatibel Chrome 109 (Windows 7). */
 var KEY = 'suruhaja_v2', OLD = 'suruhaja_v1';
 var DEFAULT = {
-  s: { brand: 'SuruhAja', wa: '6289688338182', area: 'Bekasi & sekitarnya', pin: '1234' },
+  s: { brand: 'SuruhAja', wa: '6289688338182', area: 'Bekasi & sekitarnya', adminEmail: 'budi@gmail.com', adminPass: 'admin123', hours: '07.00–21.00 WIB' },
+  calc: { freeKm: 3, perKm: 2500, stop: 5000, sedang: 5000, berat: 15000, hariini: 0, segera: 10000 },
   prices: [
     { id: 'antar', ic: '📦', n: 'Antar barang', d: 'Paket, dokumen, bekal ketinggalan, titipan.', p: 15000, u: '/antar' },
     { id: 'beli', ic: '🛒', n: 'Belikan sesuatu', d: 'Galon, makanan, obat, kebutuhan harian.', p: 12000, u: '/belanja' },
@@ -31,6 +32,15 @@ var rp = function (n) { return (n < 0 ? '-' : '') + 'Rp' + Math.abs(n).toLocaleS
 var clone = function (o) { return JSON.parse(JSON.stringify(o)); };
 var fmtDT = function (i) { return new Date(i).toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }); };
 var db;
+var PAL = [['#1f9d6b', '#2ee08f'], ['#ffb800', '#ffd35c'], ['#f2553a', '#ff8a5c'], ['#5b6cff', '#8aa0ff'], ['#0fa3b1', '#5fe0d3'], ['#c44bd8', '#ff7ac8']];
+var ICONS = {
+  antar: '<path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/>',
+  beli: '<circle cx="9" cy="20" r="1.6"/><circle cx="17" cy="20" r="1.6"/><path d="M2 3h3l2.4 11.2a1 1 0 0 0 1 .8h8.7a1 1 0 0 0 1-.8L20 7H6"/>',
+  antre: '<path d="M6 3h12M6 21h12M7 3c0 5 5 6 5 9s-5 4-5 9M17 3c0 5-5 6-5 9s5 4 5 9"/>',
+  beres: '<path d="M3 11 12 3l9 8v10H3z"/><path d="m8.5 15 2.5 2.5 4.5-5"/>',
+  cari: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  lain: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>'
+};
 function norm(o) {
   o.fee = N(o.fee); o.goods = N(o.goods); o.fuel = N(o.fuel); o.other = N(o.other); o.km = Number(o.km) || 0;
   o.pay = o.pay || 'Belum'; o.from = o.from || ''; o.to = o.to || ''; o.log = o.log || []; o.status = o.status || 'Baru'; return o;
@@ -41,21 +51,23 @@ function load() {
     db = clone(DEFAULT);
     try { var old = JSON.parse(localStorage.getItem(OLD)); if (old && old.orders) db.orders = old.orders; } catch (e) {}
   }
-  db.exp = db.exp || []; db.orders = (db.orders || []).map(norm);
+  fix();
 }
+function fix() { db.s = Object.assign({}, DEFAULT.s, db.s || {}); db.calc = Object.assign({}, DEFAULT.calc, db.calc || {}); db.exp = db.exp || []; db.orders = (db.orders || []).map(norm); }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (e) { alert('Penyimpanan lokal penuh atau diblokir browser.'); } }
 function waUrl(txt) { return 'https://wa.me/' + db.s.wa + '?text=' + encodeURIComponent(txt || 'Halo ' + db.s.brand + ', saya mau tanya layanan suruhan.'); }
 
 /* ---------- Halaman publik ---------- */
 function render() {
   document.title = db.s.brand + ' — Jasa Suruhan Harian | Tulis urusanmu, kami yang jalan';
-  $('#brand').textContent = db.s.brand; $('#foot-area').textContent = 'Melayani ' + db.s.area; $('#yr').textContent = new Date().getFullYear();
-  $('#wa-bar').href = waUrl(); $('#wa-hero').href = waUrl();
-  $('#svc-grid').innerHTML = db.prices.map(function (p) { return '<button class="svc" data-id="' + p.id + '"><span class="ic">' + p.ic + '</span><h3>' + esc(p.n) + '</h3><p>' + esc(p.d) + '</p><span class="pr">mulai ' + rp(p.p) + ' <small>' + esc(p.u) + '</small></span></button>'; }).join('');
+  $('#brand').textContent = db.s.brand; $('#foot-area').textContent = 'Melayani ' + db.s.area; $('#foot-hours').textContent = 'Jam layanan ' + db.s.hours; $('#foot-wa').href = waUrl(); $('#foot-wa').textContent = 'WhatsApp +' + db.s.wa; $('#yr').textContent = new Date().getFullYear();
+  $('#wa-bar').href = waUrl(); $('#dock-wa').href = waUrl(); $('#wa-hero').href = waUrl();
+  $('#svc-grid').innerHTML = db.prices.map(function (p, i) { var c = PAL[i % PAL.length]; return '<button class="svc rv" style="--d:' + (i * .07) + 's" data-id="' + p.id + '"><span class="ic" style="background:linear-gradient(135deg,' + c[0] + ',' + c[1] + ')"><svg viewBox="0 0 24 24" aria-hidden="true">' + (ICONS[p.id] || ICONS.lain) + '</svg></span><h3>' + esc(p.n) + '</h3><p>' + esc(p.d) + '</p><span class="pr"><small>mulai</small> ' + rp(p.p) + ' <small>' + esc(p.u) + '</small></span></button>'; }).join('');
   $('#f-svc').innerHTML = db.prices.map(function (p) { return '<option value="' + p.id + '">' + esc(p.n) + '</option>'; }).join('');
   $('#testi').innerHTML = db.testi.map(function (t) { return '<div class="q"><i>★★★★★</i><p>' + esc(t.t) + '</p><b>' + esc(t.n) + '</b></div>'; }).join('');
   $('#faq-list').innerHTML = db.faq.map(function (f) { return '<details><summary>' + esc(f[0]) + '</summary><p>' + esc(f[1]) + '</p></details>'; }).join('');
   estimate();
+  if (window.afterRender) window.afterRender();
 }
 function estimate() {
   var p = db.prices.filter(function (x) { return x.id === $('#f-svc').value; })[0];
@@ -91,11 +103,22 @@ $('#check').onsubmit = function (e) {
 
 /* ---------- Admin: pesanan, keuangan, perjalanan ---------- */
 var dlg = $('#dlg'), tab = 'ord', openSet = {}, month = 'all', ST = ['Baru', 'Diproses', 'Selesai', 'Batal'];
-$('#admin-btn').onclick = function () {
-  var pin = prompt('Masukkan PIN admin'); if (pin === null) return;
-  if (pin !== db.s.pin) return alert('PIN salah.');
-  adminView(); dlg.showModal();
-};
+var taps = 0, tapT, fails = 0, lockUntil = 0;
+function logoTap(e) { // ketuk logo 5x berurutan untuk membuka login admin
+  taps++; clearTimeout(tapT); tapT = setTimeout(function () { taps = 0; }, 2500);
+  if (taps >= 5) { taps = 0; e.preventDefault(); loginView(); if (!dlg.open) dlg.showModal(); }
+}
+Array.prototype.forEach.call(document.querySelectorAll('a.logo'), function (l) { l.addEventListener('click', logoTap); });
+function loginView(msg) {
+  dlg.innerHTML = '<h3>Masuk admin</h3><form id="lg" style="display:grid;gap:.8rem;max-width:380px"><label>Email<input id="l-e" type="text" inputmode="email" autocomplete="username" autocapitalize="off" spellcheck="false" required></label><label>Password<input id="l-p" type="password" autocomplete="current-password" required></label><p class="c-out" role="alert" style="color:var(--tom)">' + (msg || '') + '</p><div class="ad"><button class="btn" type="submit">Masuk</button><button class="btn x" type="button" data-a="close">Batal</button></div></form>';
+}
+dlg.addEventListener('submit', function (e) {
+  if (e.target.id !== 'lg') return; e.preventDefault();
+  if (Date.now() < lockUntil) return loginView('Terlalu banyak percobaan. Coba lagi sebentar.');
+  var em = $('#l-e').value.trim().toLowerCase(), ae = String(db.s.adminEmail).toLowerCase();
+  if ((em === ae || em === ae.replace('.com', 'com')) && $('#l-p').value === db.s.adminPass) { fails = 0; tab = 'ord'; adminView(); }
+  else { if (++fails >= 5) { lockUntil = Date.now() + 30000; fails = 0; } loginView('Email atau password salah.'); }
+});
 function calc(o) { var cost = o.fuel + o.other; return { fee: o.fee, cost: cost, net: o.fee - cost, talangan: o.goods, total: o.fee + o.goods }; }
 function mOf(o) { return (o.doneAt || o.at || '').slice(0, 7); }
 function mLabel(m) { return new Date(m + '-15').toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }); }
@@ -150,9 +173,9 @@ function vFinance() {
   return h;
 }
 function vSettings() {
-  return '<div class="f3"><label>Nama brand<input id="a-brand" value="' + esc(db.s.brand) + '"></label><label>Nomor WhatsApp (628…)<input id="a-wa" value="' + esc(db.s.wa) + '"></label><label>Area layanan<input id="a-area" value="' + esc(db.s.area) + '"></label><label>PIN admin<input id="a-pin" value="' + esc(db.s.pin) + '"></label></div><h4>Tarif mulai dari (Rp)</h4><div class="f3">' +
+  return '<div class="f3"><label>Nama brand<input id="a-brand" value="' + esc(db.s.brand) + '"></label><label>Nomor WhatsApp (628…)<input id="a-wa" value="' + esc(db.s.wa) + '"></label><label>Area layanan<input id="a-area" value="' + esc(db.s.area) + '"></label><label>Email admin<input id="a-email" value="' + esc(db.s.adminEmail) + '"></label><label>Password admin<input id="a-pass" value="' + esc(db.s.adminPass) + '"></label><label>Jam layanan<input id="a-hours" value="' + esc(db.s.hours) + '"></label></div><h4>Tarif mulai dari (Rp)</h4><div class="f3">' +
     db.prices.map(function (p) { return '<label>' + esc(p.n) + '<input type="number" min="0" step="1000" data-pr="' + p.id + '" value="' + p.p + '"></label>'; }).join('') +
-    '</div><div class="ad"><button class="btn" data-a="save">Simpan pengaturan</button><button class="btn" data-a="export">Ekspor JSON (cadangan)</button><button class="btn" data-a="import">Impor JSON</button><button class="btn x" data-a="reset">Reset semua</button></div><input type="file" id="imp" accept=".json,application/json" hidden>';
+    '</div><h4>Aturan kalkulator tarif (Rp)</h4><div class="f3">' + [['freeKm', 'Jarak sudah termasuk (km)'], ['perKm', 'Per km tambahan'], ['stop', 'Per titik/toko tambahan'], ['sedang', 'Tambahan beban sedang'], ['berat', 'Tambahan beban berat'], ['hariini', 'Tambahan hari ini'], ['segera', 'Tambahan segera (<1 jam)']].map(function (r) { return '<label>' + r[1] + '<input type="number" min="0" step="500" data-cr="' + r[0] + '" value="' + db.calc[r[0]] + '"></label>'; }).join('') + '</div><div class="ad"><button class="btn" data-a="save">Simpan pengaturan</button><button class="btn" data-a="export">Ekspor JSON (cadangan)</button><button class="btn" data-a="import">Impor JSON</button><button class="btn x" data-a="reset">Reset semua</button></div><input type="file" id="imp" accept=".json,application/json" hidden>';
 }
 function grab(box) { // simpan semua field pesanan dari satu <details>
   var o = db.orders.filter(function (x) { return x.code === box.dataset.c; })[0], was = o.status;
@@ -170,7 +193,7 @@ dlg.addEventListener('input', function (e) {
 });
 dlg.addEventListener('change', function (e) { if (e.target.hasAttribute('data-month')) { month = e.target.value; adminView(); }
   if (e.target.id === 'imp' && e.target.files[0]) { var r = new FileReader(); r.onload = function () { try { var d = JSON.parse(r.result); if (!d.orders || !d.prices) throw 0; if (!confirm('Timpa data sekarang dengan file ini?')) return; db = d; load2(); save(); render(); adminView(); } catch (x) { alert('File tidak valid.'); } }; r.readAsText(e.target.files[0]); } });
-function load2() { db.exp = db.exp || []; db.orders = (db.orders || []).map(norm); }
+function load2() { fix(); }
 dlg.addEventListener('click', function (e) {
   var t = e.target, d = t.dataset;
   if (d.tab) { keepOpen(); tab = d.tab; return adminView(); }
@@ -187,7 +210,8 @@ dlg.addEventListener('click', function (e) {
   if (a === 'new') { var n = norm({ code: 'SA-' + Math.random().toString(36).slice(2, 6).toUpperCase(), at: new Date().toISOString(), status: 'Diproses', name: 'Pelanggan baru', svc: db.prices[0].n, task: '', loc: '', when: 'Secepatnya' }); n.log.push({ t: n.at, x: 'Dicatat manual' }); db.orders.unshift(n); save(); openSet[n.code] = true; adminView(); }
   if (a === 'addexp') { var am = N($('#e-a').value), k = $('#e-k').value.trim(); if (!am || !k) return alert('Isi keterangan dan jumlah.'); db.exp.push({ id: Date.now(), date: $('#e-d').value, ket: k, amt: am }); save(); adminView(); }
   if (a === 'save') {
-    db.s.brand = $('#a-brand').value.trim() || 'SuruhAja'; db.s.wa = $('#a-wa').value.replace(/\D/g, ''); db.s.area = $('#a-area').value.trim(); db.s.pin = $('#a-pin').value.trim() || '1234';
+    db.s.brand = $('#a-brand').value.trim() || 'SuruhAja'; db.s.wa = $('#a-wa').value.replace(/\D/g, ''); db.s.area = $('#a-area').value.trim(); db.s.adminEmail = $('#a-email').value.trim() || 'budi@gmail.com'; db.s.adminPass = $('#a-pass').value || 'admin123'; db.s.hours = $('#a-hours').value.trim();
+    dlg.querySelectorAll('[data-cr]').forEach(function (i) { db.calc[i.dataset.cr] = N(i.value); });
     dlg.querySelectorAll('[data-pr]').forEach(function (i) { db.prices.filter(function (p) { return p.id === i.dataset.pr; })[0].p = N(i.value); });
     save(); render(); alert('Tersimpan.');
   }
