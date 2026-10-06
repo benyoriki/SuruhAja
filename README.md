@@ -1,5 +1,6 @@
-# SuruhAja — siap upload GitHub Pages
-1. Upload semua file ke repo (mis. `suruhaja`), aktifkan Settings > Pages > branch main.
-2. Ganti `USERNAME` di `index.html` (og:image) dengan username GitHub-mu.
-3. Buka situs, klik **Admin** di footer (PIN awal: 1234) lalu ubah nomor WhatsApp, PIN, area, dan tarif.
-Data pesanan tersimpan di localStorage browser (per perangkat). Untuk data bersama antar perangkat dibutuhkan backend.
+# SuruhAja v3 — GitHub Pages + PWA
+Upload SEMUA isi folder ini ke repo `SuruhAja` (root), lalu Settings > Pages > main / root.
+- Nomor WhatsApp: 6289688338182 (ubah lewat Admin > Pengaturan atau di app.js bagian DEFAULT)
+- Admin: tombol "Admin" di footer, PIN awal 1234 (segera ganti)
+- Setiap mengubah file, naikkan VERSION di sw.js agar pengguna dapat versi terbaru
+- Preview WhatsApp: preview.jpg (1200x630). Jika masih lama, kirim link dengan ?v=4
