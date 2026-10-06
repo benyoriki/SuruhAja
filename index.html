@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SuruhAja — Tulis urusanmu, kami yang jalan</title>
+<meta name="description" content="Jasa suruhan harian: antar barang, belikan, antre, beberes, urus dokumen. Tulis tugasmu, kirim ke WhatsApp, tarif disepakati di awal. Mulai dari Rp12rb.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SuruhAja">
+<meta property="og:locale" content="id_ID">
+<meta property="og:title" content="SuruhAja 📝 Tulis urusanmu, kami yang jalan">
+<meta property="og:description" content="Antar, beli, antre, beberes. Tarif jelas di awal, order lewat WhatsApp. Mulai dari Rp12rb.">
+<meta property="og:image" content="https://USERNAME.github.io/suruhaja/preview.jpg?v=1">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#fff6e0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%23ffb800%22/><path d=%22M28 52l15 15 30-34%22 stroke=%22%23173a2f%22 stroke-width=%2212%22 fill=%22none%22 stroke-linecap=%22round%22/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="nav"><div class="wrap nav-in">
+  <a class="logo" href="#top"><i>✓</i><span id="brand">SuruhAja</span></a>
+  <nav><a href="#layanan">Layanan</a><a href="#cara">Cara kerja</a><a href="#faq">FAQ</a><a href="#status">Cek pesanan</a></nav>
+  <a class="btn sm" href="#order">Tulis suruhan</a>
+</div></header>
+
+<main id="top">
+<section class="hero wrap">
+  <div class="hero-txt">
+    <p class="pill"><span class="dot"></span> Order cukup lewat WhatsApp, tanpa aplikasi</p>
+    <h1>Urusan numpuk? Tulis aja, <span>kami yang jalan.</span></h1>
+    <p class="lead">Antar barang, belikan makan, antre, beberes, urus dokumen. Tarif disepakati di awal, kabar langsung ke WhatsApp-mu.</p>
+    <ul class="ticks"><li>Tarif jelas sebelum jalan</li><li>Foto bukti saat selesai</li><li>Semua tugas halal & aman</li></ul>
+  </div>
+
+  <form class="ticket" id="order" autocomplete="off">
+    <div class="tear">Daftar suruhan <b>#baru</b></div>
+    <label>Mau disuruh apa?
+      <textarea id="f-task" rows="3" required maxlength="400" placeholder="Beli galon dan antar ke rumah…"></textarea>
+    </label>
+    <div class="chips" id="chips"></div>
+    <div class="row">
+      <label>Jenis
+        <select id="f-svc"></select></label>
+      <label>Kapan
+        <select id="f-when"><option>Secepatnya</option><option>Hari ini</option><option>Besok</option><option>Atur jadwal</option></select></label>
+    </div>
+    <div class="row">
+      <label>Nama<input id="f-name" required maxlength="40" placeholder="Nama kamu"></label>
+      <label>Lokasi / area<input id="f-loc" required maxlength="80" placeholder="Contoh: Bekasi Barat"></label>
+    </div>
+    <p class="est" id="est"></p>
+    <button class="btn big" type="submit">Kirim suruhan</button>
+    <p class="fine">Disimpan di perangkatmu, lalu lanjut ke WhatsApp. Belum ada biaya sebelum tarif kamu setujui.</p>
+    <div class="done" id="done" hidden></div>
+  </form>
+</section>
+
+<section class="strip"><div class="wrap"><b>Sering diminta:</b>
+  <span>Beli galon</span><span>Antar dokumen</span><span>Antre loket</span><span>Bersihin kamar</span><span>Titip beli obat</span><span>Cari barang</span><span>Jemput paket</span>
+</div></section>
+
+<section class="wrap sec" id="layanan">
+  <h2>Pilih jenis suruhan</h2>
+  <p class="sub">Harga di bawah adalah tarif mulai dari. Jarak, beban, dan lama pengerjaan menentukan tarif akhir, dan selalu kamu setujui dulu.</p>
+  <div class="grid" id="svc-grid"></div>
+</section>
+
+<section class="wrap sec" id="cara">
+  <h2>Tiga langkah, selesai</h2>
+  <ol class="steps">
+    <li><b>Tulis tugasmu</b><span>Isi formulir di atas. Boleh singkat, kami tanya detailnya di chat.</span></li>
+    <li><b>Sepakati tarif</b><span>Kami balas lewat WhatsApp dengan harga final. Setuju, baru jalan.</span></li>
+    <li><b>Terima kabar & bukti</b><span>Update saat berangkat, foto bukti saat beres, bayar setelah selesai.</span></li>
+  </ol>
+</section>
+
+<section class="wrap sec">
+  <h2>Kenapa pesan di sini</h2>
+  <div class="why">
+    <div><h3>Tanpa aplikasi</h3><p>Cukup browser dan WhatsApp. Tidak perlu daftar akun.</p></div>
+    <div><h3>Tarif tanpa kejutan</h3><p>Harga final disepakati dulu. Tidak ada biaya tersembunyi.</p></div>
+    <div><h3>Tugas kecil pun dilayani</h3><p>Tidak ada pesanan yang terlalu receh selama halal dan aman.</p></div>
+  </div>
+</section>
+
+<section class="wrap sec">
+  <h2>Cerita pelanggan <small>contoh tampilan, ganti dengan testimoni asli</small></h2>
+  <div class="grid t" id="testi"></div>
+</section>
+
+<section class="wrap sec" id="status">
+  <h2>Cek pesananmu</h2>
+  <form class="check" id="check"><input id="c-code" placeholder="Kode, mis. SA-7K2Q" required><button class="btn" type="submit">Cek status</button></form>
+  <p id="c-out" class="c-out" aria-live="polite"></p>
+</section>
+
+<section class="wrap sec" id="faq">
+  <h2>Pertanyaan umum</h2>
+  <div class="faq" id="faq-list"></div>
+</section>
+
+<section class="cta"><div class="wrap">
+  <h2>Satu urusan lepas, hari jadi lebih ringan.</h2>
+  <a class="btn big" href="#order">Tulis suruhan pertamamu</a>
+</div></section>
+</main>
+
+<footer class="foot wrap">
+  <span id="foot-area">Melayani Bekasi & sekitarnya</span>
+  <span>© <span id="yr"></span> SuruhAja. Layanan perorangan, bukan afiliasi merek lain.</span>
+  <button class="link" id="admin-btn">Admin</button>
+</footer>
+<a class="wa-bar" id="wa-bar" target="_blank" rel="noopener">💬 Chat WhatsApp</a>
+<dialog id="dlg"></dialog>
+<script src="app.js"></script>
+</body>
+</html>
