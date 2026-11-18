@@ -32,7 +32,7 @@ var rp = function (n) { return (n < 0 ? '-' : '') + 'Rp' + Math.abs(n).toLocaleS
 var clone = function (o) { return JSON.parse(JSON.stringify(o)); };
 var fmtDT = function (i) { return new Date(i).toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }); };
 var db;
-var PAL = [['#1f9d6b', '#2ee08f'], ['#ffb800', '#ffd35c'], ['#f2553a', '#ff8a5c'], ['#5b6cff', '#8aa0ff'], ['#0fa3b1', '#5fe0d3'], ['#c44bd8', '#ff7ac8']];
+var PAL = [['#A33215', '#d9552c'], ['#e08a00', '#ffc94d'], ['#8f1d3a', '#c8456a'], ['#6d220e', '#a8553a'], ['#b5651d', '#e8a05a'], ['#c4421f', '#ff8a5c']];
 var ICONS = {
   antar: '<path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/>',
   beli: '<circle cx="9" cy="20" r="1.6"/><circle cx="17" cy="20" r="1.6"/><path d="M2 3h3l2.4 11.2a1 1 0 0 0 1 .8h8.7a1 1 0 0 0 1-.8L20 7H6"/>',
